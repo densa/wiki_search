@@ -6,7 +6,7 @@ part 'wikiimage.g.dart';
 @freezed
 abstract class WikiImage with _$WikiImage {
   factory WikiImage({
-    String imageName,
+    String title,
     String url,
   }) = _WikiImage;
 

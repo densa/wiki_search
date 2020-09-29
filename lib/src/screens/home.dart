@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../src/widgets/image_thumb.dart';
 import '../../src/widgets/search_bar.dart';
 import '../../utils/debouncer.dart';
 import '../wikipedia.dart';
@@ -76,6 +77,7 @@ class _SearchResultContent extends StatelessWidget {
     if (pages == null) {
       return Container();
     }
+    //Empty state
     if (pages.length == 0) {
       return Container();
     }
@@ -85,11 +87,30 @@ class _SearchResultContent extends StatelessWidget {
         itemCount: pages.length,
         itemBuilder: ((context, index) {
           WikiPage pageInfo = pages[index];
+          TextTheme theme = Theme.of(context).textTheme;
           return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('${pageInfo.title} (${pageInfo.images.length} pictures)'),
-                Text(pageInfo.pageUrl),
+                const SizedBox(height: 10),
+                Text('${pageInfo.title} (${pageInfo.images.length} pictures)', style: theme.subtitle1),
+                Text(pageInfo.pageUrl, style: theme.subtitle2),
+                const SizedBox(height: 12),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: pageInfo.images.map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: ImageThumb(wikiImage: e),
+                      )
+                    ).toList(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Divider(),
               ],
             ),
           );

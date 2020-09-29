@@ -17,9 +17,9 @@ class _$WikiImageTearOff {
   const _$WikiImageTearOff();
 
 // ignore: unused_element
-  _WikiImage call({String imageName, String url}) {
+  _WikiImage call({String title, String url}) {
     return _WikiImage(
-      imageName: imageName,
+      title: title,
       url: url,
     );
   }
@@ -36,7 +36,7 @@ const $WikiImage = _$WikiImageTearOff();
 
 /// @nodoc
 mixin _$WikiImage {
-  String get imageName;
+  String get title;
   String get url;
 
   Map<String, dynamic> toJson();
@@ -47,7 +47,7 @@ mixin _$WikiImage {
 abstract class $WikiImageCopyWith<$Res> {
   factory $WikiImageCopyWith(WikiImage value, $Res Function(WikiImage) then) =
       _$WikiImageCopyWithImpl<$Res>;
-  $Res call({String imageName, String url});
+  $Res call({String title, String url});
 }
 
 /// @nodoc
@@ -60,11 +60,11 @@ class _$WikiImageCopyWithImpl<$Res> implements $WikiImageCopyWith<$Res> {
 
   @override
   $Res call({
-    Object imageName = freezed,
+    Object title = freezed,
     Object url = freezed,
   }) {
     return _then(_value.copyWith(
-      imageName: imageName == freezed ? _value.imageName : imageName as String,
+      title: title == freezed ? _value.title : title as String,
       url: url == freezed ? _value.url : url as String,
     ));
   }
@@ -76,7 +76,7 @@ abstract class _$WikiImageCopyWith<$Res> implements $WikiImageCopyWith<$Res> {
           _WikiImage value, $Res Function(_WikiImage) then) =
       __$WikiImageCopyWithImpl<$Res>;
   @override
-  $Res call({String imageName, String url});
+  $Res call({String title, String url});
 }
 
 /// @nodoc
@@ -90,11 +90,11 @@ class __$WikiImageCopyWithImpl<$Res> extends _$WikiImageCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object imageName = freezed,
+    Object title = freezed,
     Object url = freezed,
   }) {
     return _then(_WikiImage(
-      imageName: imageName == freezed ? _value.imageName : imageName as String,
+      title: title == freezed ? _value.title : title as String,
       url: url == freezed ? _value.url : url as String,
     ));
   }
@@ -104,28 +104,27 @@ class __$WikiImageCopyWithImpl<$Res> extends _$WikiImageCopyWithImpl<$Res>
 
 /// @nodoc
 class _$_WikiImage implements _WikiImage {
-  _$_WikiImage({this.imageName, this.url});
+  _$_WikiImage({this.title, this.url});
 
   factory _$_WikiImage.fromJson(Map<String, dynamic> json) =>
       _$_$_WikiImageFromJson(json);
 
   @override
-  final String imageName;
+  final String title;
   @override
   final String url;
 
   @override
   String toString() {
-    return 'WikiImage(imageName: $imageName, url: $url)';
+    return 'WikiImage(title: $title, url: $url)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _WikiImage &&
-            (identical(other.imageName, imageName) ||
-                const DeepCollectionEquality()
-                    .equals(other.imageName, imageName)) &&
+            (identical(other.title, title) ||
+                const DeepCollectionEquality().equals(other.title, title)) &&
             (identical(other.url, url) ||
                 const DeepCollectionEquality().equals(other.url, url)));
   }
@@ -133,7 +132,7 @@ class _$_WikiImage implements _WikiImage {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(imageName) ^
+      const DeepCollectionEquality().hash(title) ^
       const DeepCollectionEquality().hash(url);
 
   @override
@@ -147,13 +146,13 @@ class _$_WikiImage implements _WikiImage {
 }
 
 abstract class _WikiImage implements WikiImage {
-  factory _WikiImage({String imageName, String url}) = _$_WikiImage;
+  factory _WikiImage({String title, String url}) = _$_WikiImage;
 
   factory _WikiImage.fromJson(Map<String, dynamic> json) =
       _$_WikiImage.fromJson;
 
   @override
-  String get imageName;
+  String get title;
   @override
   String get url;
   @override

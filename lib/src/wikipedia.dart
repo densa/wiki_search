@@ -15,6 +15,7 @@ final repositoryProvider = Provider<WikipediaRepository>(
 abstract class WikipediaRepository {
   Future<List<WikiPage>> search({String searchTerm, CancelToken cancelToken});
   Future<List<WikiImage>> getPageImages(String title);
+  Future<String>getImageUrl(String imageName);
 }
 
 class WikipediaRepositoryImpl implements WikipediaRepository {
@@ -52,6 +53,35 @@ class WikipediaRepositoryImpl implements WikipediaRepository {
     }
   }
 
+  @override
+  Future<List<WikiImage>> getPageImages(String title) async {
+    final response = await _get(
+      queryParameters: <String, Object>{
+        'action': 'query',
+        'titles': title,
+        'prop': 'images',
+        'imlimit': 50,
+        'format': 'json',
+        'aimime': 'jpg',
+      }
+    );
+    return _parsePageImagesResponse(response);
+  }
+
+  @override
+  Future<String> getImageUrl(String imageName) async {
+    final response = await _get(
+      queryParameters: <String, Object>{
+        'action': 'query',
+        'titles': imageName,
+        'prop': 'pageimages',
+        'pithumbsize': 100,
+        'format': 'json',
+      }
+    );
+    return _parseImageUrlResponse(response);
+  }
+
   Future<List<WikiPage>> _parseOpenSearchResponse(Response<dynamic> queryResponse) async {
     List<dynamic> titles = queryResponse.data[1];
     List<dynamic> description = queryResponse.data[2];
@@ -71,8 +101,7 @@ class WikipediaRepositoryImpl implements WikipediaRepository {
     return pages;
   }
 
-  Future<Response> _get(
-  {
+  Future<Response> _get({
     Map<String, Object> queryParameters,
     CancelToken cancelToken,
   }) async {
@@ -81,21 +110,6 @@ class WikipediaRepositoryImpl implements WikipediaRepository {
       cancelToken: cancelToken,
       queryParameters: queryParameters,
     );
-  }
-
-  @override
-  Future<List<WikiImage>> getPageImages(String title) async {
-    final response = await _get(
-      queryParameters: <String, Object>{
-        'action': 'query',
-        'titles': title,
-        'prop': 'images',
-        'imlimit': 50,
-        'format': 'json',
-        'aimime': 'jpg',
-      }
-    );
-    return _parsePageImagesResponse(response);
   }
 
   List<WikiImage> _parsePageImagesResponse(Response<dynamic> queryResponse) {
@@ -112,4 +126,13 @@ class WikipediaRepositoryImpl implements WikipediaRepository {
     }
     return [];
   }
+
+  String _parseImageUrlResponse(Response<dynamic> response) {
+    final Map<String, dynamic> queryResponse = response.data['query'];
+    final Map<String, dynamic> pageInfo = queryResponse['pages'];
+    final Map<String, dynamic> image =
+        pageInfo?.values?.toList()?.elementAt(0)['thumbnail'];
+    return image['source'];
+  }
+
 }
