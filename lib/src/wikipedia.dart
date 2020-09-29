@@ -45,7 +45,6 @@ class WikipediaRepositoryImpl implements WikipediaRepository {
           'limit': 10,
         }
       );
-      print(response);
       List<WikiPage> pages  = await _parseOpenSearchResponse(response);
       return pages;
     } catch (e) {

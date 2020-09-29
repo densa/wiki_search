@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../src/widgets/image_thumb.dart';
 import '../../src/widgets/search_bar.dart';
 import '../../utils/debouncer.dart';
@@ -28,7 +30,6 @@ class _HomeState extends State<Home> {
 
   _debounceSearch(String searchText) {
     _debouncer(() {
-      print(searchText);
       //Update state only if search text is changed
       //Controller fire listener when textfield is change focus
       //TODO: find better solution
@@ -58,8 +59,11 @@ class _HomeState extends State<Home> {
               data: (pages) {
                 return _SearchResultContent(pages: pages);
               },
-              loading: () => CircularProgressIndicator(),
-              error: (_, __) => Container(color: Colors.red));
+              loading: () => Expanded(child: Center(child: CircularProgressIndicator())),
+              error: (_, __) => Center(
+                child: Text('Error state'),
+              )
+            );
           })
         ],
       ),
@@ -86,7 +90,7 @@ class _SearchResultContent extends StatelessWidget {
       child: ListView.builder(
         itemCount: pages.length,
         itemBuilder: ((context, index) {
-          WikiPage pageInfo = pages[index];
+          final WikiPage pageInfo = pages[index];
           TextTheme theme = Theme.of(context).textTheme;
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -95,7 +99,20 @@ class _SearchResultContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 10),
-                Text('${pageInfo.title} (${pageInfo.images.length} pictures)', style: theme.subtitle1),
+                GestureDetector(
+                  onTap: () async {
+                    if (await canLaunch(pageInfo.pageUrl)) {
+                      await launch(pageInfo.pageUrl);
+                    } else {
+                      //show alert with reason
+                      throw 'Could not launch ${pageInfo.pageUrl}';
+                    }
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: Text(
+                    '${pageInfo.title} (${pageInfo.images.length} pictures)',
+                    style: theme.subtitle1)
+                  ),
                 Text(pageInfo.pageUrl, style: theme.subtitle2),
                 const SizedBox(height: 12),
                 SingleChildScrollView(

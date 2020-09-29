@@ -7,6 +7,7 @@ import '../wikipedia.dart';
 
 const double imageSize = 100;
 
+//TODO: cancel request on dispose
 final imageUrlProvider = FutureProvider.autoDispose.family((ref, imageTitle) async {
   final repository = ref.read(repositoryProvider);
   return repository.getImageUrl(imageTitle);
